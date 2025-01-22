@@ -10,9 +10,6 @@ from sklearn.metrics.pairwise import euclidean_distances
 from sklearn.mixture import GaussianMixture
 from scipy.linalg import eigh
 from scipy.stats import zscore
-# %%
-def intensity_normalization(img_data):
-    return ((img_data - img_data.min()) / (img_data.max() - img_data.min()) * 255).astype(np.uint8)
 
 def remap_cluster_labels(image, labels):
     # Get unique labels
@@ -55,9 +52,6 @@ def intensity_clustering(image_path, mask_path,algorithms, n_clusters=3):
     # Multiply image with the mask to get the pancreas region
     clean_data = clean(img_data,seg_data)
     
-    # intensity normalization of the pancreas region
-    clean_data = intensity_normalization(clean_data)
-    
     flat_data = clean_data.reshape(-1, 1)
     
     tissue_mask = flat_data != 0
@@ -96,7 +90,7 @@ def intensity_clustering(image_path, mask_path,algorithms, n_clusters=3):
     new_img = nib.Nifti1Image(image_clustered.astype(np.int16), img.affine, img.header)
     return new_img
 
-# %%
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Classification Training.")
     parser.add_argument('-i',"--image-dir", default=None, required=True,type=str, help="images path")
@@ -122,3 +116,4 @@ if __name__ == "__main__":
             cluster_label = intensity_clustering(image_path=image_path,mask_path = mask_path,n_clusters=n,algorithms=algorithms)
             nib.save(cluster_label, output_path)
             print(f"Clustering result saved as {output_path}")
+            
