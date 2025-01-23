@@ -3,13 +3,12 @@ import nibabel as nib
 import numpy as np
 from sklearn.cluster import KMeans
 import os
-import cv2
 import argparse
 from sklearn.cluster import SpectralClustering,HDBSCAN
-from sklearn.metrics.pairwise import euclidean_distances
 from sklearn.mixture import GaussianMixture
-from scipy.linalg import eigh
-from scipy.stats import zscore
+
+def intensity_normalization(img_data):
+    return ((img_data - img_data.min()) / (img_data.max() - img_data.min()) * 255).astype(np.uint8)
 
 def remap_cluster_labels(image, labels):
     # Get unique labels
@@ -19,7 +18,7 @@ def remap_cluster_labels(image, labels):
     for label in unique_labels:
         mean_intensity = np.mean(image[labels == label])
         mean_intensities.append((label, mean_intensity))
-    # print(mean_intensities)
+
     # Sort labels by mean intensity
     sorted_labels = sorted(mean_intensities, key=lambda x: x[1])
     # Create a mapping from old labels to new labels
@@ -56,6 +55,8 @@ def intensity_clustering(image_path, mask_path,algorithms, n_clusters=3):
     
     tissue_mask = flat_data != 0
     tissue_part = flat_data[tissue_mask].reshape(-1, 1)
+    
+    tissue_part = intensity_normalization(tissue_part)
     
     if algorithms == 'kmeans':
         kmeans = KMeans(n_clusters=n_clusters, random_state=42)
