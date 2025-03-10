@@ -16,7 +16,7 @@ if __name__ == '__main__':
 
     if not os.path.exists(save_dir):
         os.mkdir(save_dir)
-        
+    
     images_np = {}
     for image_path in image_paths:
         images_np[image_path] = sitk.GetArrayFromImage(sitk.ReadImage(image_path, sitk.sitkFloat32))  
@@ -35,8 +35,11 @@ if __name__ == '__main__':
     print("Normalization completed")
     
     for image_path in image_paths:
-        image_name = image_path.split('/')[-1]
+        image_name = image_path.split('\\')[-1]
+        print(save_dir)
+        print(image_name)
         save_path = os.path.join(save_dir,image_name)
+        print(save_path)
         if os.path.exists(save_path):
             print(image_name,'skipped')
             continue

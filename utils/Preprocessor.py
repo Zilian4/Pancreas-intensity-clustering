@@ -5,13 +5,14 @@ import copy
 class Preprocessor():
     def __init__(self):
         self.image = None
+        self.original_image = None
 
     def set_image(self,image):
         self.image = image
         self.original_image = copy.deepcopy(image)
 
     def get_image(self):
-        self.image
+        return self.image
 
     def clache(self,):
         clahe_filter = sitk.AdaptiveHistogramEqualizationImageFilter()

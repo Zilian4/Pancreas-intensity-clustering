@@ -12,7 +12,7 @@ if __name__ == '__main__':
     parser.add_argument('-b',"--bias-correction", default=True, type=bool, help="enable bias correction")
     # parser.add_argument('-u',"--unsharp-masking", default=False, type=bool, help="enable unsharp masking")
     parser.add_argument('-d',"--denoising", default='bilateral', type=str, help="choose your denoising method")
-    parser.add_argument('-c',"--clache", default=True, type=bool)
+    parser.add_argument('-c',"--clache", default=False, type=bool)
 
     # /Volumes/Elements/DATASET/IPMN_images_masks/t1/images
     
@@ -37,8 +37,8 @@ if __name__ == '__main__':
                 proprocessor.set_image(raw_image)
                 # Start preprocessing
                 if args.bias_correction is True:
-                    proprocessor.n4_bias_correction()
                     print('bias correction applied')
+                    proprocessor.n4_bias_correction()
                 else:
                     print('bias correction skipped')
 
@@ -48,14 +48,14 @@ if __name__ == '__main__':
                             print('gaussian denoising applied')
                             proprocessor.bilateral_denoising()
                         case 'bilateral':
-                            proprocessor.bilateral_denoising()
                             print('bilateral denoising applied')
+                            proprocessor.bilateral_denoising()
                 else:   
                     print('denoising skipped')
                 
-                if args.clache:
-                    proprocessor.clache()
+                if args.clache is True:
                     print('clache applied')
+                    proprocessor.clache()
                 else:
                     print('clache skipped')
 
