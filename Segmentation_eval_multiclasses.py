@@ -37,9 +37,12 @@ def main(args):
 
     # Evaluation Loop
     for name in tqdm(names, desc="Evaluating Segmentation Results"):
-        seg_img = nib.load(os.path.join(segmentation_path, name))
-        gt_img = nib.load(os.path.join(ground_truth_path, name))
-
+        try:
+            seg_img = nib.load(os.path.join(segmentation_path, name))
+            gt_img = nib.load(os.path.join(ground_truth_path, name))
+        except Exception as e:
+            print(f"Error loading {name}: {e}")
+            continue
         seg_array = torch.tensor(seg_img.get_fdata(), dtype=torch.int32).unsqueeze(0)  # (1, H, W, D)
         gt_array = torch.tensor(gt_img.get_fdata(), dtype=torch.int32).unsqueeze(0)
 
@@ -94,8 +97,8 @@ def main(args):
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description="Extract radiomic features from all images in a folder and save them to a CSV.")
-    parser.add_argument('-i', '--segmentation_folder', required=True, help="Folder containing image files.")
-    parser.add_argument('-m', '--groudtruth_folder', required=True, help="Folder containing mask files corresponding to images.")
+    parser.add_argument('-s', '--segmentation_folder', required=True, help="Folder containing image files.")
+    parser.add_argument('-g', '--groudtruth_folder', required=True, help="Folder containing mask files corresponding to images.")
     parser.add_argument('-o', '--output_csv', default='radiomics_features.csv', help="Output path for the CSV file (default: radiomics_features.csv).")
     return parser.parse_args()
 

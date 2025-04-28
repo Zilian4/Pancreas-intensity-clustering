@@ -42,7 +42,9 @@ if __name__ == '__main__':
                 else:
                     print('bias correction skipped')
 
-                if args.denoising is not None:
+                if args.denoising =='None':
+                    print('denoising skipped')
+                else:
                     match args.denoising:
                         case 'gaussian':
                             print('gaussian denoising applied')
@@ -50,8 +52,6 @@ if __name__ == '__main__':
                         case 'bilateral':
                             print('bilateral denoising applied')
                             proprocessor.bilateral_denoising()
-                else:   
-                    print('denoising skipped')
                 
                 if args.clache is True:
                     print('clache applied')
