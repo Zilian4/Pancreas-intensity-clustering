@@ -110,11 +110,14 @@ if __name__ == "__main__":
         os.mkdir(output_dir)
     
     for name in os.listdir(image_dir):
-        if name.endswith('.nii.gz'):
-            image_path = os.path.join(image_dir,name)
-            mask_path =os.path.join(mask_dir,name)
-            output_path = os.path.join(output_dir,name)
-            cluster_label = intensity_clustering(image_path=image_path,mask_path = mask_path,n_clusters=n,algorithms=algorithms)
-            nib.save(cluster_label, output_path)
-            print(f"Clustering result saved as {output_path}")
+        if name.endswith('.nii.gz') and not name.startswith('.'):
+            try:
+                image_path = os.path.join(image_dir,name)
+                mask_path =os.path.join(mask_dir,name)
+                output_path = os.path.join(output_dir,name)
+                cluster_label = intensity_clustering(image_path=image_path,mask_path = mask_path,n_clusters=n,algorithms=algorithms)
+                nib.save(cluster_label, output_path)
+                print(f"Clustering result saved as {output_path}")
+            except Exception as e:
+                print(f"An error occurred while processing {image_path}: {e}")
             
